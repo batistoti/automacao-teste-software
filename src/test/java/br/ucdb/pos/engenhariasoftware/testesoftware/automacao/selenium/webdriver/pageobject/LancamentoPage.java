@@ -12,16 +12,17 @@ public class LancamentoPage {
 
     private WebDriver driver;
 
-    public LancamentoPage(final WebDriver driver){
+    public LancamentoPage(final WebDriver driver) {
         this.driver = driver;
     }
 
-    public void cria(final String descricaoLancamento, final BigDecimal valorLancamento,
-                     LocalDateTime dataHora, TipoLancamento tipo){
 
-        if(tipo == TipoLancamento.SAIDA) {
+    public void cria(final String descricaoLancamento, final BigDecimal valorLancamento,
+                     LocalDateTime dataHora, TipoLancamento tipo) {
+
+        if (tipo == TipoLancamento.SAIDA) {
             driver.findElement(By.id("tipoLancamento2")).click(); // informa lançamento: SAÍDA
-        }else{
+        } else {
             driver.findElement(By.id("tipoLancamento1")).click(); // informa lançamento: ENTRADA
         }
 
@@ -34,7 +35,7 @@ public class LancamentoPage {
         dataLancamento.sendKeys(dataHora.format(formatoDataLancamento));
 
         WebElement valor = driver.findElement(By.id("valor"));
-        driver.findElement(By.id("tipoLancamento2")).click();
+        descricao.click();
         valor.sendKeys(String.valueOf(valorLancamento));
         driver.findElement(By.id("btnSalvar")).click();
     }

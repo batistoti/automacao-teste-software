@@ -3,6 +3,7 @@ package br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdrive
 import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.pageobject.LancamentoPage;
 import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.pageobject.ListaLancamentosPage;
 import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.pageobject.TipoLancamento;
+import org.mockito.cglib.core.Local;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.annotations.AfterClass;
@@ -13,6 +14,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 import static org.testng.Assert.assertTrue;
 
@@ -34,37 +37,63 @@ public class LancamentoTest {
     }
 
     @Test
-    public void criaLancamento(){
+    public void criaLancamento() {
         listaLancamentosPage.acessa();
         listaLancamentosPage.novoLancamento();
 
-        LocalDateTime dataHora = LocalDateTime.now();
+        LocalDateTime dataHoraGerada = this.getDataLancamento();
         DateTimeFormatter formatoLancamento = DateTimeFormatter.ofPattern("dd.MM.yy");
-        final String descricaoLancamento = "Lançando saída automatizada " + dataHora.format(formatoLancamento);
+        final String descricaoLancamento = "Lançando automaizado" + dataHoraGerada.format(formatoLancamento);
         final BigDecimal valor = getValorLancamento();
-        lancamentoPage.cria(descricaoLancamento, valor, dataHora, TipoLancamento.SAIDA);
-
-        assertTrue(listaLancamentosPage.existeLancamento(descricaoLancamento, valor, dataHora, TipoLancamento.SAIDA));
+        TipoLancamento tipoLancamento = this.getTipoLancamento();
+        lancamentoPage.cria(descricaoLancamento, valor, dataHoraGerada, tipoLancamento);
+        listaLancamentosPage.busca(descricaoLancamento);
+        assertTrue(listaLancamentosPage.existeLancamento(descricaoLancamento, valor, dataHoraGerada, tipoLancamento));
     }
 
     @AfterClass
-    private void finaliza(){
+    private void finaliza() {
         driver.quit();
     }
 
+    /**
+     * Método que devolve o tipo de Lançamento de forma aleatória
+     *
+     * @return
+     */
+    private TipoLancamento getTipoLancamento() {
+        return new Random().nextBoolean() ? TipoLancamento.ENTRADA : TipoLancamento.SAIDA;
+    }
+
+    /**
+     * Método que devolve a data de lançamento com o dia de forma aleatória
+     * baseado no mês e ano atual
+     *
+     * @return
+     */
+    private LocalDateTime getDataLancamento() {
+        LocalDateTime dataAtual = LocalDateTime.now();
+        int diaGerado = ThreadLocalRandom.current().nextInt(1, 28);
+        return LocalDateTime.of(dataAtual.getYear(), dataAtual.getMonth().getValue(), diaGerado, 0, 0);
+    }
+
+    /**
+     * Método que
+     * @return
+     */
     private BigDecimal getValorLancamento() {
 
-        boolean  aplicaVariante = (System.currentTimeMillis() % 3) == 0;
+        boolean aplicaVariante = (System.currentTimeMillis() % 3) == 0;
         int fator = 10;
         long mim = 30;
         long max = 900;
-        if(aplicaVariante){
+        if (aplicaVariante) {
             mim /= fator;
             max /= fator;
         }
-        return new BigDecimal(( 1 + (Math.random() * (max - mim)))).setScale(2, RoundingMode.HALF_DOWN);
+        return new BigDecimal((1 + (Math.random() * (max - mim)))).setScale(2, RoundingMode.HALF_DOWN);
     }
-    
+
 }
 
 
