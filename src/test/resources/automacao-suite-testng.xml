@@ -1,0 +1,29 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="Trabalho Selenium Webdriver">
+    <test name="Fluxo 1">
+        <classes>
+            <class name="br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.Fluxo1Test"></class>
+        </classes>
+    </test>
+    <test name="Fluxo 2">
+        <classes>
+            <class name="br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.Fluxo2Test"></class>
+        </classes>
+    </test>
+    <test name="Fluxo 3">
+        <classes>
+            <class name="br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.Fluxo3Test"></class>
+        </classes>
+    </test>
+    <test name="Fluxo 4">
+        <classes>
+            <class name="br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.Fluxo4Test"></class>
+        </classes>
+    </test>
+    <test name="Fluxo 5">
+        <classes>
+            <class name="br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.Fluxo5Test"></class>
+        </classes>
+    </test>
+</suite>
+

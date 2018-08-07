@@ -1,5 +1,6 @@
 package br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver;
 
+import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.pageobject.Lancamento;
 import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.pageobject.LancamentoPage;
 import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.pageobject.ListaLancamentosPage;
 import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.pageobject.TipoLancamento;
@@ -12,21 +13,26 @@ import org.testng.annotations.Test;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 public class LancamentoTest {
 
-    private WebDriver driver;
-    private ListaLancamentosPage listaLancamentosPage;
-    private LancamentoPage lancamentoPage;
+    protected WebDriver driver;
+    protected ListaLancamentosPage listaLancamentosPage;
+    protected LancamentoPage lancamentoPage;
+    protected Lancamento lancamento;
 
     @BeforeClass
-    private void inicialliza() {
+    protected void inicializa() {
         boolean windows = System.getProperty("os.name").toUpperCase().contains("WIN");
         System.setProperty("webdriver.gecko.driver",
                 System.getProperty("user.dir") + "/src/test/resources/drivers/" +
@@ -34,65 +40,119 @@ public class LancamentoTest {
         driver = new FirefoxDriver();
         listaLancamentosPage = new ListaLancamentosPage(driver);
         lancamentoPage = new LancamentoPage(driver);
+        lancamento = new LancamentoBuilder().random().build();
     }
 
-    @Test
-    public void criaLancamento() {
+    public void criaLancamento(Lancamento lancamento) {
         listaLancamentosPage.acessa();
         listaLancamentosPage.novoLancamento();
+        lancamentoPage.cria(lancamento);
+        listaLancamentosPage.busca(lancamento.getDescricao());
+        assertTrue(listaLancamentosPage.existeLancamento(lancamento), "Falha no teste de criação de lançamento.");
+    }
 
-        LocalDateTime dataHoraGerada = this.getDataLancamento();
-        DateTimeFormatter formatoLancamento = DateTimeFormatter.ofPattern("dd.MM.yy");
-        final String descricaoLancamento = "Lançando automaizado" + dataHoraGerada.format(formatoLancamento);
-        final BigDecimal valor = getValorLancamento();
-        TipoLancamento tipoLancamento = this.getTipoLancamento();
-        lancamentoPage.cria(descricaoLancamento, valor, dataHoraGerada, tipoLancamento);
-        listaLancamentosPage.busca(descricaoLancamento);
-        assertTrue(listaLancamentosPage.existeLancamento(descricaoLancamento, valor, dataHoraGerada, tipoLancamento));
+    public void editarLancamento(Lancamento lancamento) {
+        listaLancamentosPage.acessa();
+        listaLancamentosPage.busca(lancamento.getDescricao());
+        listaLancamentosPage.editaLancamento();
+        lancamento.setDescricao(lancamentoPage.edita());
+        listaLancamentosPage.busca(lancamento.getDescricao());
+        assertTrue(listaLancamentosPage.existeLancamento(lancamento), "Falha no teste de edição de lançamento.");
+    }
+
+    public void excluirLancamento(Lancamento lancamento) {
+        listaLancamentosPage.acessa();
+        listaLancamentosPage.busca(lancamento.getDescricao());
+        listaLancamentosPage.excluiLancamento();
+        listaLancamentosPage.busca(lancamento.getDescricao());
+        assertFalse(listaLancamentosPage.existeLancamento(lancamento), "Falha no teste de exclusão de lançamento.");
+    }
+
+    public void validarCamposObrigatorios() {
+        listaLancamentosPage.acessa();
+        listaLancamentosPage.novoLancamento();
+        lancamentoPage.salvar();
+        assertEquals(lancamentoPage.getQtdeMensagensCamposObrigatorios(), lancamentoPage.getQtdeInputs(), "Erro de validação de campos obrigatórios.");
+        lancamentoPage.cancela();
+        listaLancamentosPage.recarregar();
+    }
+
+    public void validarTotalEntrada() {
+        listaLancamentosPage.acessa();
+        assertEquals(listaLancamentosPage.getTotalPorTipoTabela(TipoLancamento.ENTRADA), listaLancamentosPage.getTotalEntradaRodape(), "Falha no teste para validar total de entrada.");
+
+    }
+
+    public void validarTotalSaida() {
+        listaLancamentosPage.acessa();
+        assertEquals(listaLancamentosPage.getTotalPorTipoTabela(TipoLancamento.SAIDA), listaLancamentosPage.getTotalSaidaRodape(), "Falha no teste para validar total de saída");
+    }
+
+    public void acessarRelatorios() {
+        listaLancamentosPage.acessa();
+        listaLancamentosPage.acessarRelatorios();
+        assertTrue(listaLancamentosPage.existeTituloPagina("Dashboard"), "Falha no teste para acessar página de relatórios.");
     }
 
     @AfterClass
-    private void finaliza() {
+    protected void finaliza() {
         driver.quit();
     }
 
     /**
-     * Método que devolve o tipo de Lançamento de forma aleatória
-     *
-     * @return
+     * Classe LancamentoBuilder
+     * Responsável por construir um objeto da classe Lancamento
      */
-    private TipoLancamento getTipoLancamento() {
-        return new Random().nextBoolean() ? TipoLancamento.ENTRADA : TipoLancamento.SAIDA;
-    }
+    static class LancamentoBuilder {
+        private Lancamento lancamento;
 
-    /**
-     * Método que devolve a data de lançamento com o dia de forma aleatória
-     * baseado no mês e ano atual
-     *
-     * @return
-     */
-    private LocalDateTime getDataLancamento() {
-        LocalDateTime dataAtual = LocalDateTime.now();
-        int diaGerado = ThreadLocalRandom.current().nextInt(1, 28);
-        return LocalDateTime.of(dataAtual.getYear(), dataAtual.getMonth().getValue(), diaGerado, 0, 0);
-    }
-
-    /**
-     * Método que
-     * @return
-     */
-    private BigDecimal getValorLancamento() {
-
-        boolean aplicaVariante = (System.currentTimeMillis() % 3) == 0;
-        int fator = 10;
-        long mim = 30;
-        long max = 900;
-        if (aplicaVariante) {
-            mim /= fator;
-            max /= fator;
+        LancamentoBuilder() {
+            lancamento = new Lancamento();
         }
-        return new BigDecimal((1 + (Math.random() * (max - mim)))).setScale(2, RoundingMode.HALF_DOWN);
+
+        LancamentoBuilder comId(Long id) {
+            lancamento.setId(id);
+            return this;
+        }
+
+        LancamentoBuilder comData(LocalDateTime data) {
+            lancamento.setDataLancamento(data);
+            return this;
+        }
+
+        LancamentoBuilder comDescricao(String descricao) {
+            lancamento.setDescricao(descricao);
+            return this;
+        }
+
+        LancamentoBuilder comValor(double valor) {
+            lancamento.setValor(BigDecimal.valueOf(valor));
+            return this;
+        }
+
+        LancamentoBuilder comTipo(TipoLancamento tipo) {
+            lancamento.setTipoLancamento(tipo);
+            return this;
+        }
+
+        /**
+         * Método que gera o objeto Lancamento de forma aleatória
+         *
+         * @return
+         */
+        LancamentoBuilder random() {
+            Random rand = new Random();
+            return comData(LocalDateTime.now())
+                    .comTipo(rand.nextBoolean() ? TipoLancamento.ENTRADA : TipoLancamento.SAIDA)
+                    .comDescricao("Lançamento automatizado " + (new Timestamp(System.currentTimeMillis())))
+                    .comValor(rand.nextInt(100_000) / 100.0);
+        }
+
+        Lancamento build() {
+            return lancamento;
+        }
     }
+
 
 }
 
