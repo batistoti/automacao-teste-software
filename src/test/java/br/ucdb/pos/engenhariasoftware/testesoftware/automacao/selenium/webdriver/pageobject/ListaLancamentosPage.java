@@ -132,8 +132,6 @@ public class ListaLancamentosPage {
      */
     public boolean existeLancamento(Lancamento lancamento) {
         String lancamentos = driver.findElement(By.id("tabelaLancamentos")).getText();
-        String tipo = lancamento.getTipoLancamento().getDescricao();
-        String categorira = lancamento.getCategoria().getNome();
         return (lancamentos.contains(lancamento.getDescricao()) &&
                 lancamentos.contains(lancamento.getValorFormatado()) &&
                 lancamentos.contains(lancamento.getDataLancamentoFormatado()) &&

@@ -72,8 +72,7 @@ public class LancamentoTest {
         listaLancamentosPage.novoLancamento();
         lancamentoPage.salvar();
         assertEquals(lancamentoPage.getQtdeMensagensCamposObrigatorios(), lancamentoPage.getQtdeInputs(), "Erro de validação de campos obrigatórios.");
-        lancamentoPage.cancela();
-        listaLancamentosPage.recarregar();
+
     }
 
     public void validarTotalEntrada() {
@@ -93,18 +92,6 @@ public class LancamentoTest {
         assertTrue(listaLancamentosPage.existeTituloPagina("Dashboard"), "Falha no teste para acessar página de relatórios.");
     }
 
-    /**
-     * Método que devolve um valor aleatório de uma classe Enum Java
-     *
-     * @param classe
-     * @param <T>
-     * @return
-     */
-    public static <T extends Enum<?>> T randomEnum(Class<T> classe) {
-        final SecureRandom random = new SecureRandom();
-        int x = random.nextInt(classe.getEnumConstants().length);
-        return classe.getEnumConstants()[x];
-    }
 
     @AfterClass
     protected void finaliza() {
@@ -150,6 +137,19 @@ public class LancamentoTest {
         LancamentoBuilder comCategoria(Categoria categoria) {
             lancamento.setCategoria(categoria);
             return this;
+        }
+
+        /**
+         * Método que devolve um valor aleatório de uma classe Enum Java
+         *
+         * @param classe
+         * @param <T>
+         * @return
+         */
+        private <T extends Enum<?>> T randomEnum(Class<T> classe) {
+            final SecureRandom random = new SecureRandom();
+            int x = random.nextInt(classe.getEnumConstants().length);
+            return classe.getEnumConstants()[x];
         }
 
         /**
