@@ -58,7 +58,7 @@ public class LancamentoPage {
         descricao.click();
         descricao.clear();
         descricao.sendKeys(novaDescricao);
-        driver.findElement(By.id("btnSalvar")).click();
+        this.salvar();
         return novaDescricao;
     }
 
