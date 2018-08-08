@@ -16,6 +16,8 @@ public class Lancamento {
 
     private TipoLancamento tipoLancamento = TipoLancamento.SAIDA;
 
+    private Categoria categoria;
+
 
     public long getId() {
         return id;
@@ -64,8 +66,15 @@ public class Lancamento {
     }
 
     public void setTipoLancamento(TipoLancamento tipoLancamento) {
+
         this.tipoLancamento = tipoLancamento;
     }
 
+    public Categoria getCategoria() {
+        return categoria;
+    }
 
+    public void setCategoria(Categoria categoria) {
+        this.categoria = categoria;
+    }
 }

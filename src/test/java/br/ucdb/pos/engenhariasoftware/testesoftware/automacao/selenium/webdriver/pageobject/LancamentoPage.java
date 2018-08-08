@@ -23,15 +23,18 @@ public class LancamentoPage {
 
     /**
      * Método que calcula a quantidade de inputs que estão visíveis no formulário
+     *
      * @return
      */
     public int getQtdeInputs() {
-        List<WebElement> campos = driver.findElements(By.xpath("//input[contains(@type,'text')]"));
-        return campos.size();
+        List<WebElement> inputs = driver.findElements(By.xpath("//input[contains(@type,'text')]"));
+        List<WebElement> selects = driver.findElements(By.xpath("//select"));
+        return inputs.size() + selects.size();
     }
 
     /**
      * Método que calcula a quantidade de mensagens de campos obrigatórios encontrados
+     *
      * @return
      */
     public int getQtdeMensagensCamposObrigatorios() {
@@ -60,21 +63,18 @@ public class LancamentoPage {
     }
 
     public void cria(Lancamento lancamento) {
-
         if (lancamento.getTipoLancamento() == TipoLancamento.SAIDA) {
             driver.findElement(By.id("tipoLancamento2")).click(); // informa lançamento: SAÍDA
         } else {
             driver.findElement(By.id("tipoLancamento1")).click(); // informa lançamento: ENTRADA
         }
-
         WebElement descricao = driver.findElement(By.id("descricao"));
         descricao.click();
         descricao.sendKeys(lancamento.getDescricao());
-        WebElement dataLancamento = driver.findElement(By.name("dataLancamento"));
-        dataLancamento.sendKeys(lancamento.getDataLancamentoFormatado());
-        WebElement valor = driver.findElement(By.id("valor"));
+        driver.findElement(By.name("dataLancamento")).sendKeys(lancamento.getDataLancamentoFormatado());
         descricao.click();
-        valor.sendKeys(lancamento.getValorFormatado());
+        driver.findElement(By.id("valor")).sendKeys(lancamento.getValorFormatado());
+        driver.findElement(By.id("categoria")).sendKeys(lancamento.getCategoria().getNome());
         this.salvar();
     }
 }

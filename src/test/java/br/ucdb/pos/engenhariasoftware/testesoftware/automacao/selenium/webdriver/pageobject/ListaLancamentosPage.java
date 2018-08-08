@@ -58,14 +58,14 @@ public class ListaLancamentosPage {
      * Método que clica no botão "Editar" da primeira linha da tabela
      */
     public void editaLancamento() {
-        driver.findElement(By.xpath("//*[@id=\"tabelaLancamentos\"]/tbody/tr[1]/td[5]/div/a[contains(@href,'editar')]")).click();
+        driver.findElement(By.xpath("//*[@id=\"tabelaLancamentos\"]/tbody/tr[1]/td[6]/div/a[contains(@href,'editar')]")).click();
     }
 
     /**
      * Método que clica no botão "Excluir" da primeira linha da tabela
      */
     public void excluiLancamento() {
-        driver.findElement(By.xpath("//*[@id=\"tabelaLancamentos\"]/tbody/tr[1]/td[5]/div/a[contains(@href,'remover')]")).click();
+        driver.findElement(By.xpath("//*[@id=\"tabelaLancamentos\"]/tbody/tr[1]/td[6]/div/a[contains(@href,'remover')]")).click();
     }
 
     /**
@@ -100,12 +100,12 @@ public class ListaLancamentosPage {
      * @return total por tipo
      */
     public BigDecimal getTotalPorTipoTabela(TipoLancamento tipo) {
-        List<WebElement> valores = driver.findElements(By.xpath("//*[@id=\"tabelaLancamentos\"]/tbody/tr/td[3]"));
+        List<WebElement> valores = driver.findElements(By.xpath("//*[@id=\"tabelaLancamentos\"]/tbody/tr/td[4]"));
         BigDecimal total = BigDecimal.ZERO;
         int i = 1;
         for (WebElement valor : valores) {
             String valorLinha = valor.getText();
-            String tipoLinha = driver.findElement(By.xpath("//*[@id=\"tabelaLancamentos\"]/tbody/tr[" + i + "]/td[4]")).getText();
+            String tipoLinha = driver.findElement(By.xpath("//*[@id=\"tabelaLancamentos\"]/tbody/tr[" + i + "]/td[5]")).getText();
             if (tipoLinha.equals(tipo.getDescricao())) {
                 total = total.add(this.convertStringToBigDecimal(valorLinha));
             }
@@ -132,10 +132,14 @@ public class ListaLancamentosPage {
      */
     public boolean existeLancamento(Lancamento lancamento) {
         String lancamentos = driver.findElement(By.id("tabelaLancamentos")).getText();
+        String tipo = lancamento.getTipoLancamento().getDescricao();
+        String categorira = lancamento.getCategoria().getNome();
         return (lancamentos.contains(lancamento.getDescricao()) &&
                 lancamentos.contains(lancamento.getValorFormatado()) &&
                 lancamentos.contains(lancamento.getDataLancamentoFormatado()) &&
-                lancamentos.contains(lancamento.getTipoLancamento().getDescricao()));
+                lancamentos.contains(lancamento.getTipoLancamento().getDescricao()) &&
+                lancamentos.contains(lancamento.getCategoria().getNome())
+        );
     }
 
     /**

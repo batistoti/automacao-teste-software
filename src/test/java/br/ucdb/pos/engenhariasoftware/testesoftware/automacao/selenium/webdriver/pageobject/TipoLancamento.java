@@ -4,7 +4,7 @@ public enum TipoLancamento {
     ENTRADA("Entrada"),
     SAIDA("Saída");
 
-    private TipoLancamento(final String descricao){
+    private TipoLancamento(final String descricao) {
         this.descricao = descricao;
     }
 

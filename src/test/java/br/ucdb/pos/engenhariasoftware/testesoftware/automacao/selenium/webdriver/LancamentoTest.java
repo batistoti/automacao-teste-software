@@ -1,9 +1,6 @@
 package br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver;
 
-import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.pageobject.Lancamento;
-import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.pageobject.LancamentoPage;
-import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.pageobject.ListaLancamentosPage;
-import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.pageobject.TipoLancamento;
+import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.pageobject.*;
 import org.mockito.cglib.core.Local;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -13,6 +10,7 @@ import org.testng.annotations.Test;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.security.SecureRandom;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -30,6 +28,7 @@ public class LancamentoTest {
     protected ListaLancamentosPage listaLancamentosPage;
     protected LancamentoPage lancamentoPage;
     protected Lancamento lancamento;
+
 
     @BeforeClass
     protected void inicializa() {
@@ -94,6 +93,19 @@ public class LancamentoTest {
         assertTrue(listaLancamentosPage.existeTituloPagina("Dashboard"), "Falha no teste para acessar página de relatórios.");
     }
 
+    /**
+     * Método que devolve um valor aleatório de uma classe Enum Java
+     *
+     * @param classe
+     * @param <T>
+     * @return
+     */
+    public static <T extends Enum<?>> T randomEnum(Class<T> classe) {
+        final SecureRandom random = new SecureRandom();
+        int x = random.nextInt(classe.getEnumConstants().length);
+        return classe.getEnumConstants()[x];
+    }
+
     @AfterClass
     protected void finaliza() {
         driver.quit();
@@ -135,6 +147,11 @@ public class LancamentoTest {
             return this;
         }
 
+        LancamentoBuilder comCategoria(Categoria categoria) {
+            lancamento.setCategoria(categoria);
+            return this;
+        }
+
         /**
          * Método que gera o objeto Lancamento de forma aleatória
          *
@@ -143,9 +160,10 @@ public class LancamentoTest {
         LancamentoBuilder random() {
             Random rand = new Random();
             return comData(LocalDateTime.now())
-                    .comTipo(rand.nextBoolean() ? TipoLancamento.ENTRADA : TipoLancamento.SAIDA)
+                    .comTipo(randomEnum(TipoLancamento.class))
                     .comDescricao("Lançamento automatizado " + (new Timestamp(System.currentTimeMillis())))
-                    .comValor(rand.nextInt(100_000) / 100.0);
+                    .comValor(rand.nextInt(100_000) / 100.0)
+                    .comCategoria(randomEnum(Categoria.class));
         }
 
         Lancamento build() {
