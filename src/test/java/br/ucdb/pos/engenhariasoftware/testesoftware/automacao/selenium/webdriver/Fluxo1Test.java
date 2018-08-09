@@ -7,9 +7,8 @@ import org.testng.annotations.Test;
  * Acessa listagem, criar novo lançamento e validar lançamento criado
  */
 public class Fluxo1Test extends LancamentoTest {
-
     @Test
     public void criaLancamentoTest() {
-        this.criaLancamento(this.lancamento);
+        this.criaLancamento();
     }
 }

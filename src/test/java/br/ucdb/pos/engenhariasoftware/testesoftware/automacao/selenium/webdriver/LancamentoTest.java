@@ -2,6 +2,7 @@ package br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdrive
 
 import br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdriver.pageobject.*;
 import org.mockito.cglib.core.Local;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.annotations.AfterClass;
@@ -29,7 +30,6 @@ public class LancamentoTest {
     protected LancamentoPage lancamentoPage;
     protected Lancamento lancamento;
 
-
     @BeforeClass
     protected void inicializa() {
         boolean windows = System.getProperty("os.name").toUpperCase().contains("WIN");
@@ -42,7 +42,10 @@ public class LancamentoTest {
         lancamento = new LancamentoBuilder().random().build();
     }
 
-    public void criaLancamento(Lancamento lancamento) {
+    /**
+     * Método que cria e valida a criação de um lançamento
+     */
+    public void criaLancamento() {
         listaLancamentosPage.acessa();
         listaLancamentosPage.novoLancamento();
         lancamentoPage.cria(lancamento);
@@ -50,7 +53,10 @@ public class LancamentoTest {
         assertTrue(listaLancamentosPage.existeLancamento(lancamento), "Falha no teste de criação de lançamento.");
     }
 
-    public void editarLancamento(Lancamento lancamento) {
+    /**
+     * Método que edita e valida a edição de um lançamento
+     */
+    public void editarLancamento() {
         listaLancamentosPage.acessa();
         listaLancamentosPage.busca(lancamento.getDescricao());
         listaLancamentosPage.editaLancamento();
@@ -59,7 +65,10 @@ public class LancamentoTest {
         assertTrue(listaLancamentosPage.existeLancamento(lancamento), "Falha no teste de edição de lançamento.");
     }
 
-    public void excluirLancamento(Lancamento lancamento) {
+    /**
+     * Método que exclui e valida a exclusão de um lançamento
+     */
+    public void excluirLancamento() {
         listaLancamentosPage.acessa();
         listaLancamentosPage.busca(lancamento.getDescricao());
         listaLancamentosPage.excluiLancamento();
@@ -67,6 +76,9 @@ public class LancamentoTest {
         assertFalse(listaLancamentosPage.existeLancamento(lancamento), "Falha no teste de exclusão de lançamento.");
     }
 
+    /**
+     * Método que valida a obrigatoriedade dos campos do formulário estão sendo mostradas na tela de cadastro
+     */
     public void validarCamposObrigatorios() {
         listaLancamentosPage.acessa();
         listaLancamentosPage.novoLancamento();
@@ -75,23 +87,42 @@ public class LancamentoTest {
 
     }
 
+    /**
+     * Método que valida o total de entrada da página atual, verificando o total de entrada nas linhas da tabela com o total informado no rodapé
+     */
     public void validarTotalEntrada() {
         listaLancamentosPage.acessa();
         assertEquals(listaLancamentosPage.getTotalPorTipoTabela(TipoLancamento.ENTRADA), listaLancamentosPage.getTotalEntradaRodape(), "Falha no teste para validar total de entrada.");
 
     }
 
+
+    /**
+     * Método que valida o total de saída da página atual, verificando o total de saída nas linhas da tabela com o total informado no rodapé
+     */
     public void validarTotalSaida() {
         listaLancamentosPage.acessa();
         assertEquals(listaLancamentosPage.getTotalPorTipoTabela(TipoLancamento.SAIDA), listaLancamentosPage.getTotalSaidaRodape(), "Falha no teste para validar total de saída");
     }
 
+    /**
+     * Método que valida o acesso a página de relatórios
+     */
     public void acessarRelatorios() {
         listaLancamentosPage.acessa();
         listaLancamentosPage.acessarRelatorios();
-        assertTrue(listaLancamentosPage.existeTituloPagina("Dashboard"), "Falha no teste para acessar página de relatórios.");
+        assertTrue(this.existeTituloPagina("Dashboard"), "Falha no teste para acessar página de relatórios.");
     }
 
+    /**
+     * Método que verificar se o título informado existe na página atual
+     *
+     * @param titulo titulo a ser verificado
+     * @return
+     */
+    public boolean existeTituloPagina(String titulo) {
+        return driver.findElement(By.xpath("//div[contains(@class, 'panel-heading')]")).getText().contains(titulo);
+    }
 
     @AfterClass
     protected void finaliza() {
@@ -167,6 +198,9 @@ public class LancamentoTest {
         }
 
         Lancamento build() {
+            System.out.println("=============================================================================");
+            System.out.println("Lançamento aleatório criado:\n" + lancamento.toString());
+            System.out.println("=============================================================================");
             return lancamento;
         }
     }

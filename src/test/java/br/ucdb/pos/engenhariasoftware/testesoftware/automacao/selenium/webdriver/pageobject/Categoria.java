@@ -13,7 +13,7 @@ public enum Categoria {
 
     private String nome;
 
-    private Categoria(String nome) {
+    private Categoria(final String nome) {
         this.nome = nome;
     }
 

@@ -9,6 +9,6 @@ import org.testng.annotations.Test;
 public class Fluxo2Test extends Fluxo1Test {
     @Test()
     public void editaLancamentoTest() {
-        this.editarLancamento(this.lancamento);
+        this.editarLancamento();
     }
 }

@@ -37,7 +37,7 @@ public class ListaLancamentosPage {
         descricao.click();
         descricao.sendKeys(descricaoLancamento);
         driver.findElement(By.id("bth-search")).click();
-        new WebDriverWait(driver, 10).until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.xpath("//*[@id=\"tabelaLancamentos\"]")));
+        new WebDriverWait(driver, 10).until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.xpath("//*[@id=\"divTabelaLancamentos\"]")));
     }
 
     /**
@@ -114,15 +114,6 @@ public class ListaLancamentosPage {
         return total;
     }
 
-    /**
-     * Método que verificar se o título informado existe na página
-     *
-     * @param titulo titulo a ser verificado
-     * @return
-     */
-    public boolean existeTituloPagina(String titulo) {
-        return driver.findElement(By.xpath("//div[contains(@class, 'panel-heading')]")).getText().contains(titulo);
-    }
 
     /**
      * Método que verifica se existe o lançamento na página

@@ -3,6 +3,7 @@ package br.ucdb.pos.engenhariasoftware.testesoftware.automacao.selenium.webdrive
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.Select;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -42,14 +43,25 @@ public class LancamentoPage {
         return msgCampos.size();
     }
 
+    /**
+     * Método que clica no botão salvar da tela de lançamento
+     */
     public void salvar() {
         driver.findElement(By.id("btnSalvar")).click();
     }
 
+    /**
+     * Método que clica no botão cancelar da tela de lançamento
+     */
     public void cancela() {
         driver.findElement(By.id("cancelar")).click();
     }
 
+    /**
+     * Método que realiza a alteração da descrição do lançamento
+     *
+     * @return
+     */
     public String edita() {
         WebElement descricao = driver.findElement(By.id("descricao"));
         String id = driver.findElement(By.id("id")).getAttribute("value");
@@ -62,6 +74,12 @@ public class LancamentoPage {
         return novaDescricao;
     }
 
+
+    /**
+     * Método que realiza a criação de um novo lançamento
+     *
+     * @param lancamento
+     */
     public void cria(Lancamento lancamento) {
         if (lancamento.getTipoLancamento() == TipoLancamento.SAIDA) {
             driver.findElement(By.id("tipoLancamento2")).click(); // informa lançamento: SAÍDA
@@ -74,7 +92,7 @@ public class LancamentoPage {
         driver.findElement(By.name("dataLancamento")).sendKeys(lancamento.getDataLancamentoFormatado());
         descricao.click();
         driver.findElement(By.id("valor")).sendKeys(lancamento.getValorFormatado());
-        driver.findElement(By.id("categoria")).sendKeys(lancamento.getCategoria().getNome());
+        new Select(driver.findElement(By.id("categoria"))).selectByVisibleText(lancamento.getCategoria().getNome());
         this.salvar();
     }
 }

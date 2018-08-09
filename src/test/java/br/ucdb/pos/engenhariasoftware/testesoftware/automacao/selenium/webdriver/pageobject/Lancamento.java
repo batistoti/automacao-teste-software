@@ -66,7 +66,6 @@ public class Lancamento {
     }
 
     public void setTipoLancamento(TipoLancamento tipoLancamento) {
-
         this.tipoLancamento = tipoLancamento;
     }
 
@@ -76,5 +75,14 @@ public class Lancamento {
 
     public void setCategoria(Categoria categoria) {
         this.categoria = categoria;
+    }
+
+    @Override
+    public String toString() {
+        return "Descrição: " + this.descricao
+                + "\nValor: R$ " + this.getValorFormatado()
+                + "\nData: " + this.getDataLancamentoFormatado()
+                + "\nCategoria: " + this.categoria.getNome()
+                + "\nTipo: " + this.tipoLancamento.getDescricao();
     }
 }

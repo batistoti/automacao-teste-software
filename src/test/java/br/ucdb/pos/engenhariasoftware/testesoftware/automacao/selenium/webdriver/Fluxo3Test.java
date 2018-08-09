@@ -10,6 +10,6 @@ import org.testng.annotations.Test;
 public class Fluxo3Test extends Fluxo2Test {
     @Test
     public void excluiLancamentoTest() {
-        this.excluirLancamento(this.lancamento);
+        this.excluirLancamento();
     }
 }
