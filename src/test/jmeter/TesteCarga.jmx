@@ -39,7 +39,7 @@
           <stringProp name="HTTPSampler.response_timeout"></stringProp>
         </ConfigTestElement>
         <hashTree/>
-        <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="Gerar número descrição único " enabled="true">
+        <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="Gerar número descrição único" enabled="true">
           <stringProp name="TestPlan.comments">garante que a descrição do lançamento será única em todo o teste.	</stringProp>
           <stringProp name="BeanShellSampler.query">String uniqueId = &quot;${__time(,curTime)}&quot;;
 vars.put(&quot;numero_descricao&quot;, uniqueId);	</stringProp>
@@ -48,7 +48,7 @@ vars.put(&quot;numero_descricao&quot;, uniqueId);	</stringProp>
           <boolProp name="BeanShellSampler.resetInterpreter">false</boolProp>
         </BeanShellSampler>
         <hashTree/>
-        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Acessa Listagem Controller" enabled="true">
+        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="1- Acessa Listagem Controller" enabled="true">
           <stringProp name="TestPlan.comments">Acessa tela de listagem	</stringProp>
         </GenericController>
         <hashTree>
@@ -69,7 +69,7 @@ vars.put(&quot;numero_descricao&quot;, uniqueId);	</stringProp>
             <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
             <stringProp name="HTTPSampler.connect_timeout"></stringProp>
             <stringProp name="HTTPSampler.response_timeout"></stringProp>
-            <stringProp name="TestPlan.comments"> </stringProp>
+            <stringProp name="TestPlan.comments"> Acessa a tela de listagem	</stringProp>
           </HTTPSamplerProxy>
           <hashTree/>
           <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion - Valida acesso a tela de listagem" enabled="true">
@@ -83,13 +83,14 @@ vars.put(&quot;numero_descricao&quot;, uniqueId);	</stringProp>
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Cadastro Lançamento Controller" enabled="true">
+        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="2- Cadastro Lançamento Controller" enabled="true">
           <stringProp name="TestPlan.comments">Cadastrar quatro novos lançamentos em sequência	</stringProp>
         </GenericController>
         <hashTree>
           <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Cadastro" enabled="true">
             <boolProp name="LoopController.continue_forever">true</boolProp>
             <stringProp name="LoopController.loops">4</stringProp>
+            <stringProp name="TestPlan.comments">Executa 4 vezes	</stringProp>
           </LoopController>
           <hashTree>
             <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="Contador de iteração " enabled="true">
@@ -99,7 +100,7 @@ vars.put(&quot;numero_descricao&quot;, uniqueId);	</stringProp>
               <stringProp name="CounterConfig.name">iteracao</stringProp>
               <stringProp name="CounterConfig.format"></stringProp>
               <boolProp name="CounterConfig.per_user">true</boolProp>
-              <stringProp name="TestPlan.comments">Contador de iteração usado para definir o tipo de lançamento</stringProp>
+              <stringProp name="TestPlan.comments">Contador de iteração usado para definir o tipo de lançamento e concatenar com a número da descrição.	</stringProp>
               <boolProp name="CounterConfig.reset_on_tg_iteration">true</boolProp>
             </CounterConfig>
             <hashTree/>
@@ -261,8 +262,8 @@ vars.put(&quot;numero_descricao&quot;, uniqueId);	</stringProp>
             <hashTree/>
           </hashTree>
         </hashTree>
-        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Edição Lançamento Controller" enabled="true">
-          <stringProp name="TestPlan.comments">Edita 2 registros recém criados	</stringProp>
+        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="3- Edição Lançamento Controller" enabled="true">
+          <stringProp name="TestPlan.comments">Edita os 2 primeiro registros recém criados	</stringProp>
         </GenericController>
         <hashTree>
           <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Edição" enabled="true">
@@ -431,7 +432,7 @@ vars.put(&quot;numero_descricao&quot;, uniqueId);	</stringProp>
             </hashTree>
           </hashTree>
         </hashTree>
-        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Remoção Controller" enabled="true">
+        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="4- Remoção Controller" enabled="true">
           <stringProp name="TestPlan.comments">Remove um dos outros dois lançamentos que não foram editados	</stringProp>
         </GenericController>
         <hashTree>
@@ -442,6 +443,7 @@ vars.put(&quot;numero_descricao&quot;, uniqueId);	</stringProp>
             <stringProp name="maximumValue">4</stringProp>
             <stringProp name="randomSeed"></stringProp>
             <boolProp name="perThread">true</boolProp>
+            <stringProp name="TestPlan.comments">Busca uma iteração aleatória das que não foram editadas.	</stringProp>
           </RandomVariableConfig>
           <hashTree/>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Buscar Lançamento Excluir" enabled="true">
@@ -530,7 +532,7 @@ vars.put(&quot;numero_descricao&quot;, uniqueId);	</stringProp>
             <hashTree/>
           </hashTree>
         </hashTree>
-        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Acessa DashBoard Controller" enabled="true">
+        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="5- Acessa DashBoard Controller" enabled="true">
           <stringProp name="TestPlan.comments">Acessa tela de relatórios	</stringProp>
         </GenericController>
         <hashTree>
@@ -564,7 +566,7 @@ vars.put(&quot;numero_descricao&quot;, uniqueId);	</stringProp>
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Acessa Listagem Controller" enabled="true">
+        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="6- Acessa Listagem Controller" enabled="true">
           <stringProp name="TestPlan.comments">Acessa tela de listagem	</stringProp>
         </GenericController>
         <hashTree>
